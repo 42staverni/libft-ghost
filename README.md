@@ -6,7 +6,7 @@ Web-based tester for the 42 Libft project. Drag & drop your code, get instant re
 
 ```bash
 # Pull and run (single command)
-docker run -p 5173:5173 ghcr.io/viresme/libft-ghost:latest
+docker run -p 5173:5173 ghcr.io/42staverni/libft-ghost:latest
 
 # Open http://localhost:5173 in your browser
 ```
@@ -80,7 +80,7 @@ Students just run the published image. No installation needed.
 
 ```bash
 # Run the tester (any platform with Docker)
-docker run -p 5173:5173 ghcr.io/viresme/libft-ghost:latest
+docker run -p 5173:5173 ghcr.io/42staverni/libft-ghost:latest
 
 # Then open http://localhost:5173
 ```
@@ -89,7 +89,7 @@ docker run -p 5173:5173 ghcr.io/viresme/libft-ghost:latest
 
 1. **Build the image:**
    ```bash
-   docker build -t ghcr.io/viresme/libft-ghost:latest .
+   docker build -t ghcr.io/42staverni/libft-ghost:latest .
    ```
 
 2. **Authenticate with GitHub Container Registry:**
@@ -100,7 +100,7 @@ docker run -p 5173:5173 ghcr.io/viresme/libft-ghost:latest
 
 3. **Push the image:**
    ```bash
-   docker push ghcr.io/viresme/libft-ghost:latest
+   docker push ghcr.io/42staverni/libft-ghost:latest
    ```
 
 4. **Make the package public** (if needed):
@@ -119,7 +119,7 @@ docker buildx create --use
 # Build for multiple platforms
 docker buildx build \
   --platform linux/amd64,linux/arm64 \
-  -t ghcr.io/viresme/libft-ghost:latest \
+  -t ghcr.io/42staverni/libft-ghost:latest \
   --push .
 ```
 
@@ -168,7 +168,7 @@ docker buildx build \
 **Docker port already in use:**
 ```bash
 # Use a different port
-docker run -p 5174:5173 ghcr.io/viresme/libft-ghost:latest
+docker run -p 5174:5173 ghcr.io/42staverni/libft-ghost:latest
 # Then visit http://localhost:5174
 ```
 

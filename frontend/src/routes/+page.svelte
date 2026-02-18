@@ -126,12 +126,12 @@
 	<div class="flex-1 flex flex-col items-center justify-center px-6 py-16">
 		<!-- Logo/Title -->
 		<div class="text-center mb-12 animate-slide-up">
-			<div class="inline-flex items-baseline gap-2">
-				<h1 class="text-7xl font-bold tracking-tight text-ink">libft</h1>
-				<span class="text-5xl font-light text-accent-blue">tester</span>
+			<div class="inline-flex items-baseline gap-3">
+				<span class="text-7xl font-light text-accent-blue tracking-tight">libft</span>
+				<h1 class="text-5xl font-bold tracking-tight text-ink ghost-text">ghost</h1>
 			</div>
 			<p class="text-ink-muted text-lg mt-4 font-light">
-				Drop your project. Get instant feedback.
+				👻 Watching over your code
 			</p>
 		</div>
 
@@ -278,3 +278,43 @@
 		</div>
 	</footer>
 </div>
+
+<style>
+	.ghost-text {
+		text-shadow: 
+			0 0 10px rgba(255, 255, 255, 0.4),
+			0 0 20px rgba(255, 255, 255, 0.2),
+			0 0 30px rgba(255, 255, 255, 0.1);
+		filter: blur(0.3px);
+		position: relative;
+	}
+	
+	.ghost-text::after {
+		content: 'ghost';
+		position: absolute;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(255, 255, 255, 0.3) 50%,
+			transparent 100%
+		);
+		background-size: 200% 100%;
+		animation: ghost-fog 3s ease-in-out infinite;
+		-webkit-background-clip: text;
+		background-clip: text;
+		pointer-events: none;
+	}
+	
+	@keyframes ghost-fog {
+		0%, 100% {
+			background-position: 200% 0;
+		}
+		50% {
+			background-position: -200% 0;
+		}
+	}
+</style>
