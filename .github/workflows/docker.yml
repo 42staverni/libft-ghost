@@ -102,16 +102,3 @@ jobs:
           echo ""
           echo "Inspecting latest tag:"
           docker buildx imagetools inspect ghcr.io/${{ github.repository }}:latest
-
-  cleanup:
-    runs-on: ubuntu-latest
-    needs:
-      - merge
-    steps:
-      - name: Delete untagged containers
-        uses: actions/delete-package-versions@v5
-        with:
-          package-name: ${{ github.event.repository.name }}
-          package-type: 'container'
-          delete-only-untagged-versions: 'true'
-          min-versions-to-keep: 0
