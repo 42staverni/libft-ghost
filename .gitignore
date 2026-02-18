@@ -1,0 +1,29 @@
+# Go
+backend/server
+backend/*.o
+backend/test_ft_*
+
+# Node / Svelte
+frontend/node_modules
+frontend/.svelte-kit
+frontend/build
+frontend/.env.local
+frontend/.env.*.local
+
+./libft
+./42libft
+
+
+# Temp/OS
+.DS_Store
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.env.local
+.env.*.local
+*.log
+
+# Docker
+.dockerignore
