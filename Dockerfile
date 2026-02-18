@@ -7,8 +7,8 @@ COPY frontend/ .
 RUN npm run build
 
 # Stage 2: Build Go backend
-FROM golang:1.25-alpine AS backend-builder
-RUN apk add --no-cache gcc musl-dev
+FROM golang:1.25-bookworm AS backend-builder
+RUN apt-get update && apt-get install -y --no-install-recommends gcc libc6-dev && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY backend/go.mod ./
 RUN go mod tidy

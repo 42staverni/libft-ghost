@@ -1,5 +1,6 @@
 // API configuration
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+// Use relative URL for production (same origin), fallback to localhost:8080 for dev
+const API_URL = import.meta.env.VITE_API_URL || '';
 
 export interface FunctionInfo {
 	name: string;

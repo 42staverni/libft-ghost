@@ -105,7 +105,7 @@
 		results = [];
 		summary = null;
 		makeInfo = null;
-		runMemoryChecks = true;
+		runMemoryChecks = false;
 	}
 
 	function cancel() {

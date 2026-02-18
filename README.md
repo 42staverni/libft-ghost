@@ -1,8 +1,10 @@
-# Libft Tester
+# libft-ghost 👻
 
-Web-based tester for the 42 Libft project. Drag & drop your code, get instant reports with compilation errors, memory leaks, and undefined behavior detection.
+A web-based tester for the 42 Libft project. Drag & drop your code, get instant reports with compilation errors, memory leaks, and undefined behavior detection.
 
-## Quick Start (Docker)
+Built with a modern glassmorphism UI and distributed as a single Docker container.
+
+## Quick Start
 
 ```bash
 # Pull and run (single command)
@@ -11,50 +13,23 @@ docker run -p 5173:5173 ghcr.io/42staverni/libft-ghost:latest
 # Open http://localhost:5173 in your browser
 ```
 
-## Quick Start (Development)
+## Features
 
-```bash
-# Terminal 1: Backend
-cd backend && go run ./cmd/server
-
-# Terminal 2: Frontend
-cd frontend && npm run dev
-
-# Open http://localhost:5173
-```
+- ✅ **Single container** — Everything in one Docker image, no dependencies
+- ✅ **Folder drop** — No zipping needed (drag & drop directly)
+- ✅ **Real-time** — Live progress updates via Server-Sent Events
+- ✅ **Comprehensive** — Compilation, tests, Valgrind, ASan/UBSan
+- ✅ **Fast mode** — Skip memory checks for 50-100ms per test
+- ✅ **Norminette** — 42 School style checking built-in
+- ✅ **Multi-arch** — Works on Intel/AMD and Apple Silicon (ARM64)
+- ✅ **Glassmorphism UI** — Modern, minimalist design with light/dark mode
 
 ## How It Works
 
-1. **Upload** — Drag & drop your libft folder or zip
-2. **Select** — Pick which functions to test
-3. **Test** — Real-time progress via SSE streaming
-4. **Report** — See compilation, tests, memory leaks, buffer overflows, edge cases
-
-## Features
-
-- ✅ **Folder drop** — No zipping needed
-- ✅ **Real-time** — Live progress updates
-- ✅ **Comprehensive** — Compilation, tests, Valgrind, ASan/UBSan
-- ✅ **Fast mode** — Skip memory checks for 50-100ms per test
-- ✅ **Norminette** — Style checking built-in
-- ✅ **Glassmorphism UI** — Modern, minimalist design
-- ✅ **Single container** — One Docker image, no dependencies
-
-## Project Structure
-
-```
-backend/          # Go HTTP API
-├── cmd/server/   # Entry point
-├── internal/
-│   ├── handler/  # Upload + test endpoints
-│   ├── runner/   # Test execution pipeline
-│   └── testcases/# C test harnesses
-└── Dockerfile
-
-frontend/         # SvelteKit SPA
-├── src/lib/components/  # UI components
-└── src/routes/          # Main app
-```
+1. **Upload** — Drag & drop your libft folder or zip file
+2. **Select** — Pick which functions to test (with norminette warnings)
+3. **Test** — Watch real-time progress as tests run
+4. **Report** — See compilation status, test results, memory leaks, buffer overflows, and edge cases
 
 ## Testing Pipeline
 
@@ -72,100 +47,133 @@ For each function:
 | Quick (no memory) | 10s | 2s | 500ms |
 | Full (with memory) | 60s | 5s | 5s |
 
-## Distribution (GHCR)
+## Project Structure
 
-Students just run the published image. No installation needed.
-
-### For Students
-
-```bash
-# Run the tester (any platform with Docker)
-docker run -p 5173:5173 ghcr.io/42staverni/libft-ghost:latest
-
-# Then open http://localhost:5173
+```
+.
+├── Dockerfile              # Multi-stage build (frontend + backend)
+├── .github/workflows/
+│   └── docker.yml          # GitHub Actions: parallel multi-arch builds
+├── backend/                # Go HTTP API
+│   ├── cmd/server/         # Entry point
+│   ├── internal/
+│   │   ├── handler/        # Upload + test endpoints
+│   │   ├── runner/         # Test execution pipeline
+│   │   │   ├── runner.go
+│   │   │   ├── norminette.go
+│   │   │   └── detect.go
+│   │   ├── middleware/     # CORS, rate limiting
+│   │   └── testcases/      # C test harnesses (48 test files)
+│   └── Dockerfile
+└── frontend/               # SvelteKit SPA
+    ├── src/
+    │   ├── lib/components/ # DropZone, FunctionPicker, TestReport
+    │   └── routes/         # Main app (+page.svelte)
+    ├── Dockerfile.dev
+    └── package.json
 ```
 
-### For Developers (Publishing to GHCR)
+## Development
 
-1. **Build the image:**
-   ```bash
-   docker build -t ghcr.io/42staverni/libft-ghost:latest .
-   ```
-
-2. **Authenticate with GitHub Container Registry:**
-   ```bash
-   # Using personal access token (classic) with 'write:packages' scope
-   echo $GITHUB_TOKEN | docker login ghcr.io -u YOUR_USERNAME --password-stdin
-   ```
-
-3. **Push the image:**
-   ```bash
-   docker push ghcr.io/42staverni/libft-ghost:latest
-   ```
-
-4. **Make the package public** (if needed):
-   - Go to GitHub → Your profile → Packages
-   - Click on `libft-ghost`
-   - Package settings → Change visibility → Public
-
-### Alternative: Multi-arch Build
-
-For cross-platform support (Intel + Apple Silicon):
+### Quick Start (Local)
 
 ```bash
-# Create and use buildx builder
-docker buildx create --use
+# Terminal 1: Backend
+cd backend && go run ./cmd/server
 
-# Build for multiple platforms
-docker buildx build \
-  --platform linux/amd64,linux/arm64 \
-  -t ghcr.io/42staverni/libft-ghost:latest \
-  --push .
+# Terminal 2: Frontend
+cd frontend && npm run dev
+
+# Open http://localhost:5173
 ```
 
-## Requirements
+### Requirements
 
-**For development only:**
 - Go 1.25+, Node 22+
-- gcc, make, valgrind, norminette
+- gcc, make, valgrind
+- norminette (for style checking)
 - For Valgrind: `sudo apt-get install libc6-dbg`
 
-**For end users:**
-- Docker only!
+### API Endpoints
 
-## API
-
+- `GET /` — Static frontend (SPA)
 - `POST /api/upload` — Upload zip/folder
 - `POST /api/test` — Run tests (SSE streaming)
 - `GET /api/health` — Health check
 
-## Architecture
+## Distribution (GHCR)
 
+### For Students (End Users)
+
+```bash
+# Pull and run (any platform with Docker)
+docker run -p 5173:5173 ghcr.io/42staverni/libft-ghost:latest
+
+# Or use a specific version
+docker run -p 5173:5173 ghcr.io/42staverni/libft-ghost:v1.0.0
 ```
-┌──────────────────────────────────────────┐
-│          Docker Container                │
-│  ┌─────────────┐     ┌─────────────┐    │
-│  │   Svelte    │────▶│     Go      │    │
-│  │  (static)   │     │  (server)   │    │
-│  │             │◄────│             │    │
-│  └─────────────┘     └──────┬──────┘    │
-│                    gcc/valgrind/sanitizer│
-└──────────────────────────────────────────┘
+
+Then open `http://localhost:5173` in your browser.
+
+### For Maintainers (Publishing)
+
+Images are automatically built and published to GitHub Container Registry (GHCR) via GitHub Actions:
+
+- **Push to `main` branch** → Builds and pushes `latest` tag
+- **Create a release** (e.g., `v1.0.0`) → Builds and pushes versioned tags
+
+The workflow uses **parallel matrix builds** for faster multi-architecture support (AMD64 + ARM64).
+
+#### Manual Build (if needed)
+
+```bash
+# Build locally
+docker build -t ghcr.io/42staverni/libft-ghost:latest .
+
+# Multi-arch build
+docker buildx create --use
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t ghcr.io/42staverni/libft-ghost:latest \
+  --push .
+
+# Login and push
+echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+docker push ghcr.io/42staverni/libft-ghost:latest
 ```
+
+#### Make Package Public
+
+1. Go to GitHub → Your profile → Packages
+2. Click on `libft-ghost`
+3. Package settings → Change visibility → **Public**
 
 ## Troubleshooting
 
-**Backend won't start:** `cd backend && go mod tidy && go build ./...`
+### Network Error When Uploading
+- Make sure you're accessing `http://localhost:5173` (not `https`)
+- Check Docker logs: `docker logs <container-id>`
 
-**Frontend crashes:** `cd frontend && npm install && npm run dev`
+### Backend Won't Start
+```bash
+cd backend && go mod tidy && go build ./...
+```
 
-**No functions detected:** Ensure `ft_*.c` files are at zip root
+### Frontend Crashes
+```bash
+cd frontend && npm install && npm run dev
+```
 
-**Valgrind errors:** Install `sudo apt-get install libc6-dbg`
+### No Functions Detected
+- Ensure `ft_*.c` files are at the zip/folder root
+- Check that your Makefile is present
 
-**CORS errors:** Add your frontend URL to `backend/cmd/server/main.go` allowedOrigins
+### Valgrind Errors
+```bash
+sudo apt-get install libc6-dbg
+```
 
-**Docker port already in use:**
+### Docker Port Already in Use
 ```bash
 # Use a different port
 docker run -p 5174:5173 ghcr.io/42staverni/libft-ghost:latest
@@ -181,12 +189,31 @@ Create `backend/testcases/test_ft_<function>.c`:
 
 int main(void)
 {
-    // Output: PASS|FAIL test_name expected got
+    // Output format: PASS|FAIL test_name expected got
     printf("PASS basic_test 5 %d\n", ft_strlen("hello"));
     return 0;
 }
 ```
 
+## Architecture
+
+```
+┌──────────────────────────────────────────────┐
+│          Docker Container                    │
+│  ┌─────────────────┐  ┌─────────────────┐   │
+│  │   SvelteKit     │  │   Go Server     │   │
+│  │   (Frontend)    │──│   (Backend)     │   │
+│  │                 │  │                 │   │
+│  └─────────────────┘  └────────┬────────┘   │
+│                                 │            │
+│              gcc/valgrind/norminette         │
+└──────────────────────────────────────────────┘
+```
+
 ## License
 
 MIT
+
+---
+
+**Built for 42 students by 42 students** 👻
